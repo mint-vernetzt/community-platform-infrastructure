@@ -1,0 +1,31 @@
+- name: 'Create app user'
+  ansible.builtin.user:
+    name: 'community'
+    groups: 'docker'
+    home: '/home/community'
+
+- name: 'Create docker directory'
+  ansible.builtin.file:
+    path: '{{ community_docker_compose_orchestration_directory }}'
+    state: 'directory'
+    mode: '0755'
+    owner: 'community'
+
+- name: 'Create docker orchestration'
+  ansible.builtin.template:
+    src: 'templates/docker-compose.yml.j2'
+    dest: '{{ community_docker_compose_orchestration_directory }}/docker-compose.yml'
+    mode: '0644'
+    owner: 'community'
+
+- name: 'Create .env'
+  ansible.builtin.copy:
+    src: '.env'
+    dest: '{{ community_docker_compose_orchestration_directory }}/.env'
+    mode: '0644'
+    owner: 'community'
+
+- name: 'Start community platform'
+  community.docker.docker_compose:
+    project_src: '{{ community_docker_compose_orchestration_directory }}'
+    state: 'present'

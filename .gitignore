@@ -1,3 +1,6 @@
 terraform.tfvars
 terraform.tfstate*
 .terraform
+/ansible/vars/main.yml
+/ansible/inventory/digitalocean.yml
+/ansible/playbooks/roles/community/files/.env

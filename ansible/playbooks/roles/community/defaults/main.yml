@@ -1,0 +1,2 @@
+community_image: 'ghcr.io/mint-vernetzt/community-platform:main'
+community_docker_compose_orchestration_directory: '/home/community/community-platform'

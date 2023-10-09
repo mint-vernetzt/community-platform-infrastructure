@@ -1,0 +1,25 @@
+version: "3"
+
+services:
+    community:
+        image: {{ community_image }}
+        restart: unless-stopped
+        env_file:
+            - .env
+        networks:
+            - {{ docker_network }}
+        labels:
+            - "traefik.docker.network={{ docker_network }}"
+            - "traefik.enable=true"
+            - "traefik.http.routers.community-http.rule=Host(`{{ external_host }}`)"
+            - "traefik.http.routers.community-http.entrypoints=http"
+            - "traefik.http.routers.community-https.rule=Host(`{{ external_host }}`)"
+            - "traefik.http.routers.community-https.entrypoints=https"
+            - "traefik.http.routers.community-https.tls.certresolver=myresolver"
+            - "traefik.http.services.community-http.loadbalancer.server.port=3000"
+            - "traefik.http.routers.community-http.middlewares=redirect-to-https"
+            - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
+
+networks:
+    {{ docker_network }}:
+        external: true

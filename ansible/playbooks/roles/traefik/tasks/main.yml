@@ -1,0 +1,33 @@
+-   name: Creates letsencrypt directory
+    file:
+        path: /letsencrypt
+        state: directory
+
+-   name: Create docker network
+    docker_network:
+        name: "{{ docker_network }}"
+
+-   name: Create traefik container
+    community.docker.docker_container:
+        name: traefik
+        image: traefik:v2.6
+        state: started
+        restart_policy: 'always'
+        command:
+            - "--log.level=DEBUG"
+            - "--api.insecure=false"
+            - "--providers.docker=true"
+            - "--providers.docker.exposedbydefault=false"
+            - "--entrypoints.http.address=:80"
+            - "--entrypoints.https.address=:443"
+            - "--certificatesresolvers.myresolver.acme.tlschallenge=true"
+            - "--certificatesresolvers.myresolver.acme.email={{ letsencrypt_email }}"
+            - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
+        volumes:
+            - '/letsencrypt:/letsencrypt'
+            - '/var/run/docker.sock:/var/run/docker.sock:ro'
+        ports:
+            - '80:80'
+            - '443:443'
+        networks:
+            -   name: "{{ docker_network }}"

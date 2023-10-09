@@ -1,0 +1,3 @@
+digitalocean_token: ''
+letsencrypt_email: ''
+docker_network: ''
