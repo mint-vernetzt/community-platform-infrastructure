@@ -20,11 +20,19 @@ resource "digitalocean_ssh_key" "default" {
     public_key = file("~/.ssh/id_ed25519.pub")
 }
 
-resource "digitalocean_droplet" "web" {
+resource "digitalocean_droplet" "application" {
     image = "ubuntu-22-04-x64"
-    name = "community"
+    name = "application"
     region = "fra1"
     size = "s-1vcpu-2gb"
     ssh_keys = [digitalocean_ssh_key.default.id]
-    tags = ["web"]
+    tags = ["application"]
+}
+
+resource "digitalocean_project" "stage-community-platform-infrastructure" {
+  name        = "stage community platform infrastructure"
+  description = "An staging infrastructure for the community platform"
+  purpose     = "Staging Community Platform"
+  environment = "Staging"
+  resources   = [digitalocean_droplet.application.urn]
 }
