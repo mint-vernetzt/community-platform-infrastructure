@@ -1,3 +1,4 @@
 digitalocean_token: ''
 letsencrypt_email: ''
 docker_network: ''
+external_host: ''
